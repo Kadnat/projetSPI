@@ -1,0 +1,9 @@
+../Drivers/CMSIS/Include/core_cm4.h:1816:22:__NVIC_SetPriority	2
+../Core/Src/main.c:78:5:GETVAL	1
+../Core/Src/main.c:83:6:HAL_IncTick	1
+../Core/Src/main.c:92:6:Timer_start_func	1
+../Core/Src/main.c:103:6:Timer_end_func	1
+../Core/Src/main.c:113:5:main	6
+../Core/Src/main.c:226:6:SystemClock_Config	4
+../Core/Src/main.c:268:1:__io_putchar	1
+../Core/Src/main.c:283:6:Error_Handler	1
