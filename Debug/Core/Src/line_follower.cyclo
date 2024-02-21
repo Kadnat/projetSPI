@@ -1,0 +1,7 @@
+../Core/Src/line_follower.c:36:7:motor_control	3
+../Core/Src/line_follower.c:56:7:sharp_turn	4
+../Core/Src/line_follower.c:74:6:sensors5_read	7
+../Core/Src/line_follower.c:121:7:forward_brake	2
+../Core/Src/line_follower.c:130:7:past_errors	2
+../Core/Src/line_follower.c:137:6:errors_sum	3
+../Core/Src/line_follower.c:150:7:PID_control	3

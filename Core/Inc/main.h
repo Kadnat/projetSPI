@@ -83,10 +83,20 @@ void Error_Handler(void);
 #define SENS1_M2_GPIO_Port GPIOC
 #define SENS2_M2_Pin GPIO_PIN_7
 #define SENS2_M2_GPIO_Port GPIOC
+#define IR5_Pin GPIO_PIN_9
+#define IR5_GPIO_Port GPIOC
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+#define IR1_Pin GPIO_PIN_10
+#define IR1_GPIO_Port GPIOC
+#define IR2_Pin GPIO_PIN_11
+#define IR2_GPIO_Port GPIOC
+#define IR3_Pin GPIO_PIN_12
+#define IR3_GPIO_Port GPIOC
+#define IR4_Pin GPIO_PIN_2
+#define IR4_GPIO_Port GPIOD
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
 

@@ -3,4 +3,4 @@
 ../Core/Src/PID.c:32:6:HAL_IncTick	4	static
 ../Core/Src/PID.c:41:6:Timer_start_func	8	static
 ../Core/Src/PID.c:52:6:Timer_end_func	4	static
-../Core/Src/PID.c:57:6:pid_calculation	16	static
+../Core/Src/PID.c:57:6:pid_calculation	24	static

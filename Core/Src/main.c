@@ -101,7 +101,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  pid_calculation(100);
+	 PID_control();
   }
   /* USER CODE END 3 */
 }
