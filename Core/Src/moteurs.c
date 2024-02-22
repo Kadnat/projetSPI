@@ -28,13 +28,13 @@ void forward(uint8_t speedL, uint8_t speedR)
 	  HAL_GPIO_WritePin(SENS2_M2_GPIO_Port, SENS2_M2_Pin, 0);
 
 
-		  pid_calculation(170, SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin);
-		  pid_calculation(170, SPEED_SENSORM2_GPIO_Port, SPEED_SENSORM2_Pin);
+		  pid_calculation(speedL, SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin);
+		  pid_calculation(speedR, SPEED_SENSORM2_GPIO_Port, SPEED_SENSORM2_Pin);
 
 
-	  HAL_TIM_Base_Stop(&htim1);
-	  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
-	  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
+	  //HAL_TIM_Base_Stop(&htim1);
+	  //HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+	  //HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
 
 }
 
@@ -54,8 +54,8 @@ void backward(uint8_t speedL, uint8_t speedR)
 	  HAL_GPIO_WritePin(SENS2_M2_GPIO_Port, SENS2_M2_Pin, 1);
 
 
-	 		  pid_calculation(170, SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin);
-	 		  pid_calculation(170, SPEED_SENSORM2_GPIO_Port, SPEED_SENSORM2_Pin);
+	 		  pid_calculation(speedL, SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin);
+	 		  pid_calculation(speedR, SPEED_SENSORM2_GPIO_Port, SPEED_SENSORM2_Pin);
 
 
 	  HAL_TIM_Base_Stop(&htim1);

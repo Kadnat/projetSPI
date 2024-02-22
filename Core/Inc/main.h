@@ -79,6 +79,8 @@ void Error_Handler(void);
 #define SPEED_SENSORM1_GPIO_Port GPIOC
 #define SPEED_SENSORM2_Pin GPIO_PIN_5
 #define SPEED_SENSORM2_GPIO_Port GPIOC
+#define PWM_M3_Pin GPIO_PIN_1
+#define PWM_M3_GPIO_Port GPIOB
 #define SENS1_M2_Pin GPIO_PIN_6
 #define SENS1_M2_GPIO_Port GPIOC
 #define SENS2_M2_Pin GPIO_PIN_7

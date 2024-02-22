@@ -8,6 +8,6 @@
 #ifndef INC_LINE_FOLLOWER_SIMPLE_H_
 #define INC_LINE_FOLLOWER_SIMPLE_H_
 
-
+void go_forward(void);
 
 #endif /* INC_LINE_FOLLOWER_SIMPLE_H_ */
