@@ -29,7 +29,7 @@ void forward(uint8_t speedL, uint8_t speedR)
 
 
 		  pid_calculation(speedL, SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin);
-		  pid_calculation(speedR, SPEED_SENSORM2_GPIO_Port, SPEED_SENSORM2_Pin);
+		  //pid_calculation(speedR, SPEED_SENSORM2_GPIO_Port, SPEED_SENSORM2_Pin);
 
 
 	  //HAL_TIM_Base_Stop(&htim1);

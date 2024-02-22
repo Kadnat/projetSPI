@@ -9,8 +9,9 @@
 
 static int i = 0;int bit =0;int speedL =0;int res =0; int speedR =0;
 
-static uint32_t cpt_time=0;
-
+static uint32_t cpt_time=0,cpt_start=0,time_elapsed=0;
+int finished_measure=0; int enabled_motorR=0;int first_front=0;
+int tickL=0;tickR=0;
 // refernce and pid related constants
 int ref_speed = 0;float duty =0;int iteration_time =0;
 int first_dutyL=1999; first_dutyR=1999; is_firstL=1; is_firstR=1;
@@ -73,28 +74,10 @@ void pid_calculation(int r_speed, GPIO_TypeDef * GPIO_PORT, uint16_t GPIO_PIN)
 	      				is_firstL=0;
 	      				}
 
-	    	      	if ( HAL_GPIO_ReadPin(GPIO_PORT, GPIO_PIN) == 0){
-	    	      		while(HAL_GPIO_ReadPin(GPIO_PORT, GPIO_PIN) == 0){}
-
-	      			if (res==0){
-						// res here is a flag to see whether to start counter or to stop it
-						Timer_start_func();
-						res=1;
-					} else if (res==1){
-
-						iteration_time = (1 - GETVAL()/64000) + i; //DOWN Counter 168000 to 0 Thats why we subtract
-
-						// this formula comes as
-						// time between on slit = iteration_time
-						// time for 20 slits  = 20 * iteration_time
-						// for 1 time = 1/20*iteration time
-						// for one minute = 60000/20*iteration_time
-
+	      			if(finished_measure)
+	      			{
+	      				iteration_time=time_elapsed/20;
 						speedL = 3000/iteration_time;
-
-
-						// timer end function as we have seen the second high pulse
-						Timer_end_func();
 
 						// to remove certain high level debouncing values
 						if (speedL < 3000) {
@@ -113,20 +96,20 @@ void pid_calculation(int r_speed, GPIO_TypeDef * GPIO_PORT, uint16_t GPIO_PIN)
 						// directly loaded to the current compare register value instead of using the funtion for
 						// PWM to speed up the iteration tim intervals
 						//TIM1->CCR1 = duty;
-						//if(duty>2000){duty=2000;}
-						//if(duty<1200){duty=1200;}
+						if(duty>2000){duty=2000;}
+						if(duty<600){duty=600;}
 
 						printf("speedL=%d\r\n",speedL);
 						TIM1->CCR1=duty;
 
 						// to keep a track of the previous error
 						previous_errorL = current_errorL;
-
+						finished_measure=0;
 						//*******************************************///
 						res=0;
 					}
-	    	      	}
 	      		}
+
 				else if(GPIO_PIN==SPEED_SENSORM2_Pin)
 				{
 					if(is_firstR)
@@ -189,4 +172,46 @@ void pid_calculation(int r_speed, GPIO_TypeDef * GPIO_PORT, uint16_t GPIO_PIN)
 				}
 	      	}
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim == &htim6 )
+	{
+
+	}
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if(GPIO_Pin == SPEED_SENSORM1_Pin)
+  {
+	  /*
+		if(HAL_GPIO_ReadPin(SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin)==0)
+		{
+			first_front=1;
+		}
+		if((HAL_GPIO_ReadPin(SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin)==1)&&(first_front=1))
+		{
+		*/
+		  if((tickL==20)&&(finished_measure==0))
+		  {
+			  time_elapsed=cpt_time-cpt_start;
+			  tickL=0;
+			  finished_measure=1;
+			  Timer_end_func();
+
+		  }
+		  if(tickL==0)
+		  {
+			Timer_start_func();
+			cpt_start=cpt_time;
+
+		  }
+		  if((tickL>=0) && (tickL<20))
+		  {
+			tickL++;
+			//finished_measure=0;
+		 // }
+		}
+	}
+  }
 
