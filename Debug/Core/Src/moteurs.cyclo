@@ -1,7 +1,7 @@
 ../Core/Src/moteurs.c:15:6:forward	1
-../Core/Src/moteurs.c:41:6:backward	1
-../Core/Src/moteurs.c:66:6:stop	1
-../Core/Src/moteurs.c:77:6:turn_left	1
-../Core/Src/moteurs.c:102:6:turn_right	1
-../Core/Src/moteurs.c:127:6:left_motor_control	1
-../Core/Src/moteurs.c:139:6:right_motor_control	1
+../Core/Src/moteurs.c:40:6:backward	1
+../Core/Src/moteurs.c:65:6:stop	1
+../Core/Src/moteurs.c:76:6:turn_left	1
+../Core/Src/moteurs.c:101:6:turn_right	1
+../Core/Src/moteurs.c:126:6:left_motor_control	1
+../Core/Src/moteurs.c:138:6:right_motor_control	1

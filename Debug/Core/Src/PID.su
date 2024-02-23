@@ -1,8 +1,6 @@
 ../Drivers/CMSIS/Include/core_cm4.h:1816:22:__NVIC_SetPriority	16	static
-../Core/Src/PID.c:30:5:GETVAL	4	static
-../Core/Src/PID.c:35:6:HAL_IncTick	4	static
-../Core/Src/PID.c:44:6:Timer_start_func	8	static
-../Core/Src/PID.c:55:6:Timer_end_func	4	static
-../Core/Src/PID.c:60:6:pid_calculation	24	static
-../Core/Src/PID.c:175:6:HAL_TIM_PeriodElapsedCallback	16	static
-../Core/Src/PID.c:183:6:HAL_GPIO_EXTI_Callback	16	static
+../Core/Src/PID.c:33:5:GETVAL	4	static
+../Core/Src/PID.c:38:6:HAL_IncTick	4	static
+../Core/Src/PID.c:47:6:Timer_start_func	8	static
+../Core/Src/PID.c:58:6:Timer_end_func	4	static
+../Core/Src/PID.c:63:6:pid_calculation	32	static

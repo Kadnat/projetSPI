@@ -6,12 +6,15 @@
  */
 #include "stdint.h"
 #include "tim.h"
+#include "main.h"
 
-static int i = 0;int bit =0;int speedL =0;int res =0; int speedR =0;
+uint32_t tickL=0, tickR=0, speedL=0, speedR=0, previous_speedL=0;;
+
+static int i = 0;int bit =0;int res =0;
 
 static uint32_t cpt_time=0,cpt_start=0,time_elapsed=0;
-int finished_measure=0; int enabled_motorR=0;int first_front=0;
-int tickL=0;tickR=0;
+int finished_measure=1; int enabled_motorR=0;int first_front=0;
+
 // refernce and pid related constants
 int ref_speed = 0;float duty =0;int iteration_time =0;
 int first_dutyL=1999; first_dutyR=1999; is_firstL=1; is_firstR=1;
@@ -21,7 +24,7 @@ float previous_errorL = 0;float current_errorL = 0;
 float previous_errorR = 0;float current_errorR = 0;
 
 // variables for the pid function that is actually not a function
-float KP = 0.1;int KI = 10;int KD = 1;
+float KP = 0.01;int KI = 10;int KD = 1;
 
 // some extra variables working as temporary storage
 int input = 0;int integration_sum = 0;
@@ -68,22 +71,26 @@ void pid_calculation(int r_speed, GPIO_TypeDef * GPIO_PORT, uint16_t GPIO_PIN)
 	      		if(GPIO_PIN==SPEED_SENSORM1_Pin)
 	      		{
 
-	      			if(is_firstL)
-	      				{
-	      				TIM1->CCR1=first_dutyL;
-	      				is_firstL=0;
-	      				}
 
 	      			if(finished_measure)
 	      			{
-	      				iteration_time=time_elapsed/20;
-						speedL = 3000/iteration_time;
+	      				//iteration_time=time_elapsed/20;
+						//speedL = 3000/iteration_time;
+
+	      				speedL=getSpeed();
 
 						// to remove certain high level debouncing values
-						if (speedL < 3000) {
+						if (speedL <= 250) {
 							input = speedL;
 						}
+						else
+							input = previous_speedL;
 
+						if(input==0) input=1;
+						iteration_time = 3000/input;
+
+						printf("speed=%d\r\n",speedL);
+						printf("previous_speedL=%d\r\n",previous_speedL);
 						//******************************************///
 						//PId has been implemented here
 						//PID constants are
@@ -96,15 +103,23 @@ void pid_calculation(int r_speed, GPIO_TypeDef * GPIO_PORT, uint16_t GPIO_PIN)
 						// directly loaded to the current compare register value instead of using the funtion for
 						// PWM to speed up the iteration tim intervals
 						//TIM1->CCR1 = duty;
-						if(duty>2000){duty=2000;}
-						if(duty<600){duty=600;}
+						uint32_t duty_int = (uint32_t)duty ;
 
-						printf("speedL=%d\r\n",speedL);
-						TIM1->CCR1=duty;
+						//printf("duty=%d\r\n",duty);
+						if(duty_int>1999){duty_int=1999;}
+						if(duty_int<300){duty_int=300;}
+
+						TIM1->CCR1=duty_int;
+
+						printf("RPM=%d\r\n",input);
+						printf("duty=%f\r\n",duty);
+
+
 
 						// to keep a track of the previous error
 						previous_errorL = current_errorL;
-						finished_measure=0;
+						previous_speedL = input;
+						finished_measure=1;
 						//*******************************************///
 						res=0;
 					}
@@ -172,46 +187,5 @@ void pid_calculation(int r_speed, GPIO_TypeDef * GPIO_PORT, uint16_t GPIO_PIN)
 				}
 	      	}
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	if (htim == &htim6 )
-	{
 
-	}
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  if(GPIO_Pin == SPEED_SENSORM1_Pin)
-  {
-	  /*
-		if(HAL_GPIO_ReadPin(SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin)==0)
-		{
-			first_front=1;
-		}
-		if((HAL_GPIO_ReadPin(SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin)==1)&&(first_front=1))
-		{
-		*/
-		  if((tickL==20)&&(finished_measure==0))
-		  {
-			  time_elapsed=cpt_time-cpt_start;
-			  tickL=0;
-			  finished_measure=1;
-			  Timer_end_func();
-
-		  }
-		  if(tickL==0)
-		  {
-			Timer_start_func();
-			cpt_start=cpt_time;
-
-		  }
-		  if((tickL>=0) && (tickL<20))
-		  {
-			tickL++;
-			//finished_measure=0;
-		 // }
-		}
-	}
-  }
 

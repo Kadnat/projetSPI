@@ -45,6 +45,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+//letf motor
+uint32_t ICVal3_Left = 0;
+int Is_First_Captured_Left=0;
+uint32_t ICVal1_Left=0,ICVal2_Left=0,Difference_Left=0;
 
 /* USER CODE END PV */
 
@@ -91,8 +95,14 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM3_Init();
   MX_TIM6_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
+  printf("start=0\r\n");
+  //HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
+
+  printf("start=1\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -103,8 +113,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	forward(120, 130);
-	 //  go_forward();
+
+	  forward(90,110);
+
+
+
+
 
 
 
@@ -167,6 +181,66 @@ PUTCHAR_PROTOTYPE
   return ch;
 }
 
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
+	{
+
+
+		if(Is_First_Captured_Left==0)
+		{
+			ICVal1_Left= HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+			Is_First_Captured_Left=1;
+			__HAL_TIM_SET_CAPTUREPOLARITY(htim,TIM_CHANNEL_3,TIM_INPUTCHANNELPOLARITY_FALLING);
+		}
+		else if(Is_First_Captured_Left==1)
+		{
+			ICVal2_Left= HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+
+			Is_First_Captured_Left=2;
+			__HAL_TIM_SET_CAPTUREPOLARITY(htim,TIM_CHANNEL_3,TIM_INPUTCHANNELPOLARITY_RISING);
+
+			if(ICVal2_Left>ICVal1_Left)
+			{
+				Difference_Left = ICVal2_Left-ICVal1_Left; //microsecondes
+			}
+			else if(ICVal2_Left<ICVal1_Left)
+			{
+				Difference_Left =  (0xffff-ICVal1_Left)+ICVal2_Left;
+			}
+
+		}
+		else if(Is_First_Captured_Left==2)
+		{
+			ICVal3_Left = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+			// Calculer la durée de l'état bas ici
+			Difference_Left += ICVal3_Left - ICVal2_Left;
+			Is_First_Captured_Left=0;
+			__HAL_TIM_SET_COUNTER(htim,0);
+			__HAL_TIM_DISABLE_IT(&htim2,TIM_IT_CC3);
+		}
+	}
+}
+
+
+int getSpeed(void)
+{
+	int speed=0;
+	float duree=0, RPM=0;
+
+	__HAL_TIM_ENABLE_IT(&htim2,TIM_IT_CC3);
+
+
+	 //  go_forward();
+	 duree=(float)Difference_Left*(1.0/64000.0);
+
+	 RPM = (60.0*1000.0) / (20.0*duree);
+
+	 speed= RPM;
+
+	return speed;
+}
 /* USER CODE END 4 */
 
 /**

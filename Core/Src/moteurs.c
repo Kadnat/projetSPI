@@ -27,7 +27,6 @@ void forward(uint8_t speedL, uint8_t speedR)
 	  HAL_GPIO_WritePin(SENS1_M2_GPIO_Port, SENS1_M2_Pin, 1);
 	  HAL_GPIO_WritePin(SENS2_M2_GPIO_Port, SENS2_M2_Pin, 0);
 
-
 		  pid_calculation(speedL, SPEED_SENSORM1_GPIO_Port, SPEED_SENSORM1_Pin);
 		  //pid_calculation(speedR, SPEED_SENSORM2_GPIO_Port, SPEED_SENSORM2_Pin);
 
