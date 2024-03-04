@@ -1,6 +1,7 @@
-../Core/Src/main.c:70:5:main	1
-../Core/Src/main.c:133:6:SystemClock_Config	4
-../Core/Src/main.c:175:1:__io_putchar	1
-../Core/Src/main.c:184:6:HAL_TIM_IC_CaptureCallback	7
-../Core/Src/main.c:227:5:getSpeed	1
-../Core/Src/main.c:250:6:Error_Handler	1
+../Core/Src/main.c:71:5:main	2
+../Core/Src/main.c:138:6:SystemClock_Config	4
+../Core/Src/main.c:180:1:__io_putchar	1
+../Core/Src/main.c:189:6:HAL_TIM_IC_CaptureCallback	7
+../Core/Src/main.c:232:5:getSpeed	1
+../Core/Src/main.c:250:6:HAL_TIM_PeriodElapsedCallback	2
+../Core/Src/main.c:264:6:Error_Handler	1

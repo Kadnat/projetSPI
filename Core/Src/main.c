@@ -49,6 +49,7 @@
 uint32_t ICVal3_Left = 0;
 int Is_First_Captured_Left=0;
 uint32_t ICVal1_Left=0,ICVal2_Left=0,Difference_Left=0;
+uint32_t cpt_ms=0;
 
 /* USER CODE END PV */
 
@@ -99,7 +100,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   printf("start=0\r\n");
-  //HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_Base_Start_IT(&htim6);
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
 
   printf("start=1\r\n");
@@ -113,8 +114,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if(cpt_ms>=20)
+	  {
+		  forward(100,110);
+		  cpt_ms=0;
+	  }
 
-	  forward(90,110);
 
 
 
@@ -232,7 +237,7 @@ int getSpeed(void)
 	__HAL_TIM_ENABLE_IT(&htim2,TIM_IT_CC3);
 
 
-	 //  go_forward();
+
 	 duree=(float)Difference_Left*(1.0/64000.0);
 
 	 RPM = (60.0*1000.0) / (20.0*duree);
@@ -241,6 +246,16 @@ int getSpeed(void)
 
 	return speed;
 }
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim == &htim6 )
+	{
+		cpt_ms++;
+	}
+}
+
 /* USER CODE END 4 */
 
 /**

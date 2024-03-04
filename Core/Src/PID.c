@@ -8,7 +8,7 @@
 #include "tim.h"
 #include "main.h"
 
-uint32_t tickL=0, tickR=0, speedL=0, speedR=0, previous_speedL=0;;
+uint32_t tickL=0, tickR=0, speedL=0, speedR=0, previous_speedL=0, previous_speedL2=0, previous_speedL3=0;
 
 static int i = 0;int bit =0;int res =0;
 
@@ -22,9 +22,10 @@ int first_dutyL=1999; first_dutyR=1999; is_firstL=1; is_firstR=1;
 //errors variables
 float previous_errorL = 0;float current_errorL = 0;
 float previous_errorR = 0;float current_errorR = 0;
+float error_somme=0, delta_erreur=0;
 
 // variables for the pid function that is actually not a function
-float KP = 0.01;int KI = 10;int KD = 1;
+float KP = 700;float KI = 70;int KD = 30;
 
 // some extra variables working as temporary storage
 int input = 0;int integration_sum = 0;
@@ -80,11 +81,11 @@ void pid_calculation(int r_speed, GPIO_TypeDef * GPIO_PORT, uint16_t GPIO_PIN)
 	      				speedL=getSpeed();
 
 						// to remove certain high level debouncing values
-						if (speedL <= 250) {
-							input = speedL;
+						if ((speedL) <= 250) {
+							input = (speedL+previous_speedL+previous_speedL2+previous_speedL3)/4;
 						}
-						else
-							input = previous_speedL;
+						//else
+							//input = previous_speedL;
 
 						if(input==0) input=1;
 						iteration_time = 3000/input;
@@ -97,8 +98,11 @@ void pid_calculation(int r_speed, GPIO_TypeDef * GPIO_PORT, uint16_t GPIO_PIN)
 						// KP =0.1 Kd = 1 KI =10
 						// input to the pid setup is the current_error
 						current_errorL = ref_speed - input;
+						error_somme+=current_errorL;
 						integration_sum += (current_errorL * iteration_time);
-						duty = KP * current_errorL + KI * integration_sum + KD * 1000 * (current_errorL -previous_errorL)/iteration_time;
+						delta_erreur=current_errorL-previous_errorL;
+
+						duty = KP * current_errorL + KI * error_somme + KD*delta_erreur;//+ KD * 1000 * (current_errorL -previous_errorL)/iteration_time;
 
 						// directly loaded to the current compare register value instead of using the funtion for
 						// PWM to speed up the iteration tim intervals
@@ -118,6 +122,8 @@ void pid_calculation(int r_speed, GPIO_TypeDef * GPIO_PORT, uint16_t GPIO_PIN)
 
 						// to keep a track of the previous error
 						previous_errorL = current_errorL;
+						previous_speedL3 = previous_speedL2;
+						previous_speedL2 = previous_speedL;
 						previous_speedL = input;
 						finished_measure=1;
 						//*******************************************///
