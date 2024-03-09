@@ -25,11 +25,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdint.h"
+#include "servo.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-void SERVO_MoveTo(float af_Angle);
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -45,11 +46,7 @@ void SERVO_MoveTo(float af_Angle);
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint32_t PSC_Value = 64000000/3276800;
-uint32_t ARR_Value = 0;
 
-uint16_t Period_Min = 0;
-uint16_t Period_Max = 0;
 
 /* USER CODE END PV */
 
@@ -74,9 +71,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	ARR_Value = 64000000/(50.0*(PSC_Value+1))-1;
-	Period_Min = ARR_Value*(0.7/20.0);
-	Period_Max = ARR_Value*(2.3/20.0);
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -116,19 +111,14 @@ int main(void)
 	  HAL_Delay(1500);
 
 	  SERVO_MoveTo(45);
-	  HAL_Delay(500);
+	  HAL_Delay(1500);
 
 	  SERVO_MoveTo(90);
-	  HAL_Delay(500);
+	  HAL_Delay(1500);
 
 	  SERVO_MoveTo(180);
-	  HAL_Delay(500);
+	  HAL_Delay(1500);
 
-	  SERVO_MoveTo(275);
-	  HAL_Delay(500);
-
-	  SERVO_MoveTo(360);
-	  HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
@@ -180,14 +170,6 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-void SERVO_MoveTo(float af_Angle)
-{
-	uint16_t au16_Pulse = 0;
-
-	au16_Pulse = ((af_Angle*(Period_Max - Period_Min))/360.0)+ Period_Min;
-
-	TIM1->CCR1 = au16_Pulse;
-}
 
 /* USER CODE END 4 */
 
