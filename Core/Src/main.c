@@ -26,6 +26,7 @@
 /* USER CODE BEGIN Includes */
 #include "stdint.h"
 #include "servo.h"
+#include "ESP01.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -35,7 +36,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define Test_uartESP USART3
+ItemUnit Test_uartEsp;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -94,9 +96,18 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+ // HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+
+  choose_device(&Test_uartEsp, &huart3);
+  HAL_UART_Receive_IT(Test_uartEsp.huart, &Test_uartEsp.byteRx, 1);
+  HAL_Delay(700);
+  TEST_AT(&Test_uartEsp);
+  EspInit(&Test_uartEsp);
+
+
 
   /* USER CODE END 2 */
 
@@ -107,17 +118,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  SERVO_MoveTo(0);
-	  HAL_Delay(1500);
-
-	  SERVO_MoveTo(45);
-	  HAL_Delay(1500);
-
-	  SERVO_MoveTo(90);
-	  HAL_Delay(1500);
-
-	  SERVO_MoveTo(180);
-	  HAL_Delay(1500);
+	  //HAL_UART_Transmit(&huart3, (uint8_t*)"AT\r\n", 4, 0xFFFFFF);
+	 get_server_status(&Test_uartEsp);
+	 get_server_command(&Test_uartEsp);
+	 HAL_Delay(500);
 
   }
   /* USER CODE END 3 */
@@ -169,7 +173,16 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
+	if (huart->Instance == Test_uartESP) {
+		HAL_UART_Receive_IT(Test_uartEsp.huart,&Test_uartEsp.byteRx, 1);
+
+		Test_uartEsp.rxBuffer[Test_uartEsp.rxbufferIndex] = Test_uartEsp.byteRx;
+		Test_uartEsp.rxbufferIndex++;
+
+	}
+}
 
 /* USER CODE END 4 */
 

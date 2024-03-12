@@ -1,0 +1,7 @@
+../Core/Src/ESP01.c:11:6:choose_device	16	static
+../Core/Src/ESP01.c:16:6:__printf	24	static
+../Core/Src/ESP01.c:28:6:TEST_AT	24	static
+../Core/Src/ESP01.c:50:6:EspInit	24	static
+../Core/Src/ESP01.c:80:6:clearBuffer	24	static
+../Core/Src/ESP01.c:87:6:get_server_command	80	static
+../Core/Src/ESP01.c:109:6:get_server_status	16	static
